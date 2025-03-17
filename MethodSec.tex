@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Methods Section}
+
+\begin{document}
+
+\section{Methods}
+
+To evaluate the effectiveness of our proposed activation function, we compare its performance against five established activation functions. ReLU, ErfLU, SoftPlus, Smooth Elliot, and SeLU. 
+ The following is some context for these activation functions: 
+ 
+ \textbf{   ReLU (Rectified Linear Unit) [1]} is computationally efficient and helps mitigate the vanishing gradient problem, making it widely used in deep learning. However, it suffers from the \textbf{dying ReLU} problem, where neurons can become inactive (outputting zero) for all inputs, leading to reduced model capacity. 
+ 
+ \textbf{   ErfLU (Error Function Linear Unti) [2]} is smooth and differentiable, which helps to improve gradient flow and stability during training while reducing sharp transitions found in ReLU. However, it is computationally more expensive due to error function calculation, making it slower compared to simpler activation functions like ReLU.
+ 
+ \textbf{   SoftPlus [3]} is a smooth and differentiable alternative to ReLU that avoids dead neurons by always producing positive gradients, leading to more stable training. However, it is more computationally expensive than ReLU because of the logarithmic and exponential operations, making it slower in large-scale networks. 
+ 
+ \textbf{   Smooth Elliot [4]}is a computationally efficient activation function that approximates the behaviour while avoiding the problem of vanishing gradients. However, it lacks strict mathematical smoothness, which can lead to suboptimal convergence in certain deep learning architectures. 
+ 
+      \textbf{   SeLU (Scaled Exponential Linear Unit) [5]} is an activation function that automatically normalizes activations, promoting self-normalization of the network during training, which can improve performance and convergence speed. However, SeLU requires specific network architectures (such as a certain initialization scheme and architecture constraints) to function correctly, and it may not work well in networks with batch normalization or when applied to non-rectified data. 
+
+ This comparison is conducted through a series of four distinct experiments. Each experiment employs identical neural network architectures, with the only variation being the activation function used. Specifically, we replace the activation function in each model with one of the six under investigation, including our own.
+
+ We are going to study two activation functions. We are going to call them ErfLUPlus and ErfLUMinus. These activation functions will take inspiration from ErfLU for the properties that are required for an activation function that generalizes well across many differing fields of neural network training. Provided below is a table that displays the properties to look for in an activation function of the different activation functions we are going to discuss.
+
+\begin{table}[h]
+    \begin{center}
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|l|c|c|c|c|c|c|}
+            \hline
+            \textbf{Property} & \textbf{ReLU} & \textbf{ErfLU} & \textbf{SoftPlus} & \textbf{Smooth Elliot} & \textbf{SeLU} & \textbf{Our Act Func} \\
+            \hline
+            Bounded                & No  & Yes  & Yes  & Yes  & No  & Yes\\
+            Monotonic              & Yes & Yes  & Yes  & Yes  & Yes & Yes\\
+            Monotonic Derivative   & No  & Yes  & Yes  & Yes  & Yes & Yes\\
+            Efficient              & Yes & Yes  & No   & Yes  & Yes & Yes\\
+            Lipschitz Continuous   & No  & Yes  & Yes  & Yes  & Yes & Yes\\
+            Smooth                 & No  & Yes  & Yes  & Yes  & Yes & Yes\\
+            \hline
+        \end{tabular}
+        \caption{Comparison of Activation Function Properties}
+        \label{tab:activation_comparison}
+    \end{center}
+\end{table}
+
+
+
+To ensure robust and reliable results, we employ \textbf{10-fold cross-validation}. The data set is partitioned into ten subsets of equal size, where nine folds are used for training, and the remaining fold serves as a test set. This process is repeated ten times, cycling through all partitions so that each subset is used for testing exactly once while serving as training data in the remaining nine iterations. This approach provides a comprehensive evaluation of model performance and reduces the risk of overfitting.
+
+Performance is assessed using the \textbf{mean squared error (MSE)} metric, focusing on the error derived from the test sets. Although the training error indicates how well the model learns from the seen data, our primary concern is the generalization error, how well the model performs on unseen data. This metric is critical in assessing the real-world applicability of each activation function.
+
+The experiments utilize the \textbf{FashionMNIST dataset}, which consists of grayscale images of various clothing items, including shirts, shoes, and shorts, each labelled accordingly. The evaluation is structured into four distinct experimental conditions:
+
+\begin{enumerate}
+    \item \textbf{Baseline Performance:} The first experiment involves training and testing on the unaltered FashionMNIST dataset, serving as a benchmark.
+    \item \textbf{Robustness to Noisy Test Data:} The second experiment introduces noise into the test dataset while keeping the training data unchanged. This assesses how well each activation function handles perturbations in unseen data.
+    \item \textbf{Impact of Noisy Training Data:} In the third experiment, noise is added to the training dataset while the test data remains unaltered, allowing us to analyze the effect of training data distortion on model performance.
+    \item \textbf{Noise in Both Training and Testing Data:} The final experiment introduces noise into both the training and testing datasets, simulating a more challenging learning environment to evaluate each activation function’s resilience under increased data variability.
+\end{enumerate}
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Method} & \textbf{Train Data} & \textbf{Test Data} \\
+        \hline
+        Method 1 & Normal & Normal \\
+        Method 2 & Normal & Noise \\
+        Method 3 & Noise  & Normal \\
+        Method 4 & Noise  & Noise  \\
+        \hline
+    \end{tabular}
+    \caption{Overview of Training and Testing Conditions for Each Method}
+    \label{tab:train_test_methods}
+\end{table}
+
+By evaluating model performance under these four conditions, we aim to determine the generalization capabilities and robustness of our proposed activation function compared to existing alternatives.
+
+
+\maketitle
+References:
+
+[1] Huang, G., Liu, Z., Maaten, L. v. d., \& Weinberger, K. Q. (2018). Densely connected convolutional networks. \textit{arXiv}. \href{https://arxiv.org/abs/1803.08375}{https://arxiv.org/abs/1803.08375} 
+
+[2] He, K., Zhang, X., Ren, S., \& Sun, J. (2016). Deep residual learning for image recognition. \textit{arXiv}. \href{https://arxiv.org/abs/1606.08415}{https://arxiv.org/abs/1606.08415} 
+
+[3] Papers with Code. (n.d.). SoftPlus. \textit{Papers with Code}. Retrieved March 12, 2025, from \href{https://paperswithcode.com/method/softplus}{https://paperswithcode.com/method/softplus} 
+
+[4] Chollet, F. (2020). \textit{The future of deep learning and artificial intelligence}. arXiv. \href{https://arxiv.org/pdf/2010.09458}{https://arxiv.org/pdf/2010.09458} 
+
+[5] Klambauer, G., Unterthiner, T., Mayr, A., \& Hochreiter, S. (2017). \textit{Self-normalizing neural networks}. arXiv. \href{https://arxiv.org/abs/1706.02515}{https://arxiv.org/abs/1706.02515} 
+
+\end{document}
